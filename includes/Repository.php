@@ -116,10 +116,25 @@ final class Repository
         return ['rows' => $rows, 'total' => $total, 'pages' => max(1, (int) ceil($total / $perPage))];
     }
 
-    public function deleteContact(int $id): void
+    public function deleteContact(int $id): bool
     {
         global $wpdb;
-        $wpdb->delete($this->contacts, ['id' => $id]);
+        if ($id <= 0) {
+            return false;
+        }
+
+        $wpdb->query('START TRANSACTION');
+        $wpdb->delete($this->queue, ['contact_id' => $id], ['%d']);
+        $wpdb->delete($this->events, ['contact_id' => $id], ['%d']);
+        $deleted = $wpdb->delete($this->contacts, ['id' => $id], ['%d']);
+
+        if ($deleted === 1) {
+            $wpdb->query('COMMIT');
+            return true;
+        }
+
+        $wpdb->query('ROLLBACK');
+        return false;
     }
 
     public function saveCampaign(array $input): int
@@ -267,3 +282,4 @@ final class Repository
         $wpdb->query($wpdb->prepare("DELETE FROM {$this->events} WHERE created_at<%s", $before));
     }
 }
+
