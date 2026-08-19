@@ -105,7 +105,20 @@ final class Admin
         <table class="widefat striped"><thead><tr><th><?php esc_html_e('Name', 'dizzy-newsletter'); ?></th><th>Email</th><th><?php esc_html_e('Status', 'dizzy-newsletter'); ?></th><th><?php esc_html_e('Tags', 'dizzy-newsletter'); ?></th><th><?php esc_html_e('Source', 'dizzy-newsletter'); ?></th><th><?php esc_html_e('Subscribed', 'dizzy-newsletter'); ?></th><th></th></tr></thead><tbody>
         <?php foreach ($data['rows'] as $row) : ?><tr><td><?php echo esc_html((string) $row['name']); ?></td><td><?php echo esc_html((string) $row['email']); ?></td><td><?php echo esc_html((string) $row['status']); ?></td><td><?php echo esc_html((string) $row['tags']); ?></td><td><?php echo esc_html((string) $row['source']); ?></td><td><?php echo esc_html((string) ($row['confirmed_at'] ?: $row['created_at'])); ?></td><td><a class="submitdelete" href="<?php echo esc_url(wp_nonce_url(admin_url('admin-post.php?action=dizzy_nl_delete_contact&id=' . absint($row['id'])), 'dizzy_nl_delete_contact')); ?>"><?php esc_html_e('Delete', 'dizzy-newsletter'); ?></a></td></tr><?php endforeach; ?>
         </tbody></table>
-        <div class="tablenav-pages"><?php echo wp_kses_post(paginate_links(['base' => add_query_arg('paged', '%#%'), 'current' => $page, 'total' => $data['pages'], 'type' => 'list'])); ?></div></div>
+        <?php if ($data['pages'] > 1) : ?>
+            <div class="tablenav-pages">
+                <?php
+                $pagination = paginate_links([
+                    'base' => add_query_arg('paged', '%#%'),
+                    'current' => $page,
+                    'total' => $data['pages'],
+                    'type' => 'list',
+                ]);
+                echo $pagination !== null ? wp_kses_post($pagination) : '';
+                ?>
+            </div>
+        <?php endif; ?>
+        </div>
         <?php
     }
 
@@ -192,3 +205,4 @@ final class Admin
     private function guard(string $action): void { if (! current_user_can('manage_options')) wp_die('Forbidden', '', ['response' => 403]); check_admin_referer($action); }
     private function redirect(string $page, array $args = []): void { wp_safe_redirect(add_query_arg(array_merge(['page' => $page], $args), admin_url('admin.php'))); exit; }
 }
+
