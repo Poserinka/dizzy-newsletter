@@ -30,10 +30,15 @@ final class Repository
             return ['ok' => false, 'message' => __('Please enter a valid email address.', 'dizzy-newsletter')];
         }
         $existing = $this->contactByEmail($email);
-        if ($existing && $existing['status'] === 'unsubscribed') {
-            return ['ok' => false, 'message' => __('This address has previously unsubscribed.', 'dizzy-newsletter')];
-        }
         if ($existing && $existing['status'] === 'subscribed') {
+            $now = current_time('mysql', true);
+            $wpdb->update($this->contacts, [
+                'name' => sanitize_text_field($name),
+                'tags' => implode(',', array_filter(array_map('sanitize_key', $tags))),
+                'source' => sanitize_text_field($source),
+                'consent_at' => $now,
+                'updated_at' => $now,
+            ], ['id' => (int) $existing['id']]);
             return ['ok' => true, 'id' => (int) $existing['id'], 'token' => '', 'status' => 'subscribed'];
         }
         $now = current_time('mysql', true);
