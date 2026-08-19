@@ -135,12 +135,6 @@ a[x-apple-data-detectors],
                      <tr>
                       <td align="center" style="padding:10px 0;Margin:0"><h3 class="es-m-txt-c" style="Margin:0;font-family:arial, 'helvetica neue', helvetica, sans-serif;mso-line-height-rule:exactly;letter-spacing:0;font-size:20px;font-style:normal;font-weight:bold;line-height:30px;color:#333333"><?php echo esc_html($content); ?></h3></td>
                      </tr>
-                     <tr>
-                      <td align="center" style="padding:10px 0;Margin:0"><h3 class="es-m-txt-c" style="Margin:0;font-family:arial, 'helvetica neue', helvetica, sans-serif;mso-line-height-rule:exactly;letter-spacing:0;font-size:20px;font-style:normal;font-weight:bold;line-height:30px;color:#333333"><?php echo esc_html((string) $event_time); ?></h3></td>
-                     </tr>
-					 <tr>
-                      <td align="center" style="padding:10px 0;Margin:0"><h3 class="es-m-txt-c" style="Margin:0;font-family:arial, 'helvetica neue', helvetica, sans-serif;mso-line-height-rule:exactly;letter-spacing:0;font-size:20px;font-style:normal;font-weight:bold;line-height:30px;color:#333333"><?php echo esc_html((string) $currency . ' ' . (string) $total_amount); ?></h3></td>
-                     </tr>
                     </tbody>
                    </table></td>
                  </tr>
@@ -162,20 +156,6 @@ a[x-apple-data-detectors],
                       <td align="center" style="padding:10px 0;Margin:0"><span class="es-button-border" style="border-style:solid;border-color:#2CB543;background:#5C68E2;border-width:0px;display:inline-block;border-radius:6px;width:auto"><a href="<?php echo esc_url($button_url); ?>" target="_blank" class="es-button" style="mso-style-priority:100 !important;text-decoration:none !important;mso-line-height-rule:exactly;color:#FFFFFF;font-size:20px;font-weight:normal;padding:10px 30px;display:inline-block;background:#5C68E2;border-radius:6px;font-family:arial, 'helvetica neue', helvetica, sans-serif;font-style:normal;line-height:24px;width:auto;text-align:center;letter-spacing:0;mso-padding-alt:0;mso-border-alt:10px solid #5C68E2;text-transform:none;border-left-width:30px;border-right-width:30px"><?php echo esc_html($button_text); ?></a></span></td>
                      </tr>
 					<?php endif; ?>
-						
-                     
-                     <tr>
-                      <td align="center" style="padding:10px 0 5px;Margin:0"><h3 class="es-m-txt-c" style="Margin:0;font-family:arial, 'helvetica neue', helvetica, sans-serif;mso-line-height-rule:exactly;letter-spacing:0;font-size:20px;font-style:normal;font-weight:bold;line-height:30px;color:#333333">Name: <?php echo esc_html((string) $customer_name); ?></h3></td>
-                     </tr>
-                     <tr>
-                      <td align="center" style="padding:10px 0 5px;Margin:0"><h3 class="es-m-txt-c" style="Margin:0;font-family:arial, 'helvetica neue', helvetica, sans-serif;mso-line-height-rule:exactly;letter-spacing:0;font-size:20px;font-style:normal;font-weight:bold;line-height:30px;color:#333333">Email: <?php echo esc_html((string) $customer_email); ?></h3></td>
-                     </tr>
-                     <tr>
-                      <td align="center" style="padding:10px 0 5px;Margin:0"><h3 class="es-m-txt-c" style="Margin:0;font-family:arial, 'helvetica neue', helvetica, sans-serif;mso-line-height-rule:exactly;letter-spacing:0;font-size:20px;font-style:normal;font-weight:bold;line-height:30px;color:#333333">Phone: <?php echo esc_html((string) $customer_phone); ?></h3></td>
-                     </tr>
-                     <tr>
-                      <td align="center" style="padding:10px 0 5px;Margin:0"><h3 class="es-m-txt-c" style="Margin:0;font-family:arial, 'helvetica neue', helvetica, sans-serif;mso-line-height-rule:exactly;letter-spacing:0;font-size:20px;font-style:normal;font-weight:bold;line-height:30px;color:#333333"><?php echo esc_html(sprintf(__('Order number: %d', 'dizzy-ticket-manager'), (int) $order_id)); ?></h3></td>
-                     </tr>
 					 <tr>
                       <td align="center" style="padding:10px 0;Margin:0"><span class="es-button-border" style="border-style:solid;border-color:#2CB543;background:#5C68E2;border-width:0px;display:inline-block;border-radius:6px;width:auto"><a href="https://maps.app.goo.gl/t73PkgDRtb6RvKFMA" target="_blank" class="es-button" style="mso-style-priority:100 !important;text-decoration:none !important;mso-line-height-rule:exactly;color:#FFFFFF;font-size:20px;font-weight:normal;padding:10px 30px;display:inline-block;background:#5C68E2;border-radius:6px;font-family:arial, 'helvetica neue', helvetica, sans-serif;font-style:normal;line-height:24px;width:auto;text-align:center;letter-spacing:0;mso-padding-alt:0;mso-border-alt:10px solid #5C68E2;text-transform:none;border-left-width:30px;border-right-width:30px">GOOGLE MAPS</a></span></td>
                      </tr>
