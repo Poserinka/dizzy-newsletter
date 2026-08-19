@@ -155,7 +155,7 @@ final class Admin
     public function sendCampaign(): void { $this->guard('dizzy_nl_send_campaign'); $raw = sanitize_text_field(wp_unslash((string) ($_POST['scheduled_at'] ?? ''))); $scheduled = $raw !== '' ? get_gmt_from_date(str_replace('T', ' ', $raw) . ':00') : null; $count = $this->repository->enqueueCampaign(absint($_POST['id'] ?? 0), $scheduled); if ($scheduled === null) wp_schedule_single_event(time() + 10, 'dizzy_nl_process_queue'); $this->redirect('dizzy-newsletter', ['queued' => $count]); }
     public function testCampaign(): void { $this->guard('dizzy_nl_test_campaign'); $ok = $this->sender->sendTest(absint($_POST['id'] ?? 0), sanitize_email(wp_unslash((string) ($_POST['test_email'] ?? '')))); $this->redirect('dizzy-newsletter-campaign', ['id' => absint($_POST['id'] ?? 0), 'test' => $ok ? 1 : 0]); }
     public function saveContact(): void { $this->guard('dizzy_nl_save_contact'); $tags = explode(',', sanitize_text_field(wp_unslash((string) ($_POST['tags'] ?? '')))); $this->repository->saveContact((string) $_POST['email'], (string) ($_POST['name'] ?? ''), 'admin', $tags, true); $this->redirect('dizzy-newsletter-audience'); }
-    public function deleteContact(): void { $this->guard('dizzy_nl_delete_contact'); $this->repository->deleteContact(absint($_GET['id'] ?? 0)); $this->redirect('dizzy-newsletter-audience'); }
+    public function deleteContact(): void { $this->guard('dizzy_nl_delete_contact'); $deleted = $this->repository->deleteContact(absint($_GET['id'] ?? 0)); $this->redirect('dizzy-newsletter-audience', ['deleted' => $deleted ? 1 : 0]); }
 
     public function import(): void
     {
