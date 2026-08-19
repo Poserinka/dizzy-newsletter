@@ -111,7 +111,7 @@ final class Frontend
             wp_send_json_error(['message' => $result['message']], 400);
         }
         if (($result['status'] ?? '') === 'subscribed') {
-            wp_send_json_success(['message' => __('You are already subscribed.', 'dizzy-newsletter')]);
+            wp_send_json_success(['message' => __('You are subscribed.', 'dizzy-newsletter')]);
         }
         if (! $confirmed) {
             $url = add_query_arg(['dizzy_nl_action' => 'confirm', 'token' => $result['token']], home_url('/'));
@@ -188,3 +188,4 @@ final class Frontend
         return hash_hmac('sha256', $action . '|' . $contactId . '|' . $campaignId, wp_salt('auth'));
     }
 }
+
