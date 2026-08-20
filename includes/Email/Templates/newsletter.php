@@ -98,7 +98,7 @@ a[x-apple-data-detectors],
                    <table cellpadding="0" cellspacing="0" width="100%" role="presentation" style="mso-table-lspace:0pt;mso-table-rspace:0pt;border-spacing:0px">
                     <tbody>
                      <tr>
-                      <td align="center" style="padding:0 0 10px;Margin:0;font-size:0px"><img src="<?php echo esc_url( site_url() ); ?>/wp-content/plugins/dizzy-newsletter/includes/Email/Templates/images/jazzcafedizzylogoblack.png" alt="Logo" width="246" title="Logo" class="adapt-img" style="display:block;font-size:12px;border:0;outline:none;text-decoration:none;margin:0"></td>
+                      <td align="center" style="padding:0 0 10px;Margin:0;font-size:0px"><img src="<?php echo esc_url( site_url() ); ?>wp-content/plugins/dizzy-newsletter/includes/Email/Templates/images/jazzcafedizzylogoblack.png" alt="Logo" width="246" title="Logo" class="adapt-img" style="display:block;font-size:12px;border:0;outline:none;text-decoration:none;margin:0"></td>
                      </tr>
                     </tbody>
                    </table></td>
@@ -126,7 +126,7 @@ a[x-apple-data-detectors],
                    <table cellpadding="0" cellspacing="0" width="100%" role="presentation" style="mso-table-lspace:0pt;mso-table-rspace:0pt;border-spacing:0px">
                     <tbody>
                      <tr>
-                      <td align="center" style="padding:10px 0;Margin:0;font-size:0px"><img src="https://ezqppko.stripocdn.email/content/guids/CABINET_71fc850462a30f85882bb5bbe103e7e0c12939bd26cd2590539119795da29084/images/jazzcafedizzylogoblack.png" alt="" width="484" class="adapt-img" style="display:block;font-size:14px;border:0;outline:none;text-decoration:none;margin:0"></td>
+                      <td align="center" style="padding:10px 0;Margin:0;font-size:0px"><img src="<?php echo esc_url( site_url() ); ?>wp-content/plugins/dizzy-newsletter/includes/Email/Templates/images/jazzcafedizzylogoblack.png" alt="" width="484" class="adapt-img" style="display:block;font-size:14px;border:0;outline:none;text-decoration:none;margin:0"></td>
                      </tr>
                      
 					<?php if ($hero_image_url !== '') : ?>	
@@ -168,9 +168,6 @@ a[x-apple-data-detectors],
                       <td align="center" style="padding:10px 0;Margin:0"><span class="es-button-border" style="border-style:solid;border-color:#2CB543;background:#5C68E2;border-width:0px;display:inline-block;border-radius:6px;width:auto"><a href="<?php echo esc_url($button_url); ?>" target="_blank" class="es-button" style="mso-style-priority:100 !important;text-decoration:none !important;mso-line-height-rule:exactly;color:#FFFFFF;font-size:20px;font-weight:normal;padding:10px 30px;display:inline-block;background:#5C68E2;border-radius:6px;font-family:arial, 'helvetica neue', helvetica, sans-serif;font-style:normal;line-height:24px;width:auto;text-align:center;letter-spacing:0;mso-padding-alt:0;mso-border-alt:10px solid #5C68E2;text-transform:none;border-left-width:30px;border-right-width:30px"><?php echo esc_html($button_text); ?></a></span></td>
                      </tr>
 						<?php endif; ?>
-                     <tr>
-                      <td align="center" style="padding:10px 0;Margin:0"><span class="es-button-border" style="border-style:solid;border-color:#2CB543;background:#5C68E2;border-width:0px;display:inline-block;border-radius:6px;width:auto"><a href="https://maps.app.goo.gl/t73PkgDRtb6RvKFMA" target="_blank" class="es-button" style="mso-style-priority:100 !important;text-decoration:none !important;mso-line-height-rule:exactly;color:#FFFFFF;font-size:20px;font-weight:normal;padding:10px 30px;display:inline-block;background:#5C68E2;border-radius:6px;font-family:arial, 'helvetica neue', helvetica, sans-serif;font-style:normal;line-height:24px;width:auto;text-align:center;letter-spacing:0;mso-padding-alt:0;mso-border-alt:10px solid #5C68E2;text-transform:none;border-left-width:30px;border-right-width:30px">GOOGLE MAPS</a></span></td>
-                     </tr>
                      <tr>
                       <td align="center" style="padding:10px 0;Margin:0"><p style="Margin:0;mso-line-height-rule:exactly;font-family:arial, 'helvetica neue', helvetica, sans-serif;line-height:21px;letter-spacing:0;font-weight:normal;color:#333333;font-size:14px"><a href="<?php echo esc_url($view_in_browser_url); ?>" style="color:#ccc">View in browser</a></p></td>
                      </tr>
