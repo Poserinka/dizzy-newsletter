@@ -192,6 +192,13 @@ final class Repository
         if (! $campaign) {
             return 0;
         }
+
+        $queueState = $this->campaignQueueState($campaignId);
+
+        if (! $queueState['allowed']) {
+            return -1;
+        }
+
         $where = "status='subscribed'";
         $args = [];
         if ($campaign['target_tag'] !== '') {
@@ -201,6 +208,29 @@ final class Repository
         $sql = "SELECT id FROM {$this->contacts} WHERE {$where}";
         $ids = $args ? $wpdb->get_col($wpdb->prepare($sql, ...$args)) : $wpdb->get_col($sql);
         $now = current_time('mysql', true);
+
+        $wpdb->query(
+            $wpdb->prepare(
+                "UPDATE {$this->queue} q
+                 LEFT JOIN {$this->contacts} c ON c.id=q.contact_id
+                 SET q.status='skipped'
+                 WHERE q.campaign_id=%d
+                   AND (c.id IS NULL OR c.status<>'subscribed')",
+                $campaignId
+            )
+        );
+        $wpdb->query(
+            $wpdb->prepare(
+                "UPDATE {$this->queue} q
+                 INNER JOIN {$this->contacts} c ON c.id=q.contact_id
+                 SET q.status='queued',q.attempts=0,q.error_message=NULL,
+                     q.sent_at=NULL,q.created_at=%s
+                 WHERE q.campaign_id=%d AND c.status='subscribed'",
+                $now,
+                $campaignId
+            )
+        );
+
         foreach ($ids as $contactId) {
             $wpdb->query($wpdb->prepare(
                 "INSERT IGNORE INTO {$this->queue} (campaign_id,contact_id,status,created_at) VALUES (%d,%d,'queued',%s)",
@@ -216,6 +246,43 @@ final class Repository
             'updated_at' => $now,
         ], ['id' => $campaignId]);
         return count($ids);
+    }
+
+    /**
+     * Determine whether a campaign can be queued now.
+     *
+     * @return array{allowed:bool,available_at:int,pending:int,last_sent_at:string}
+     */
+    public function campaignQueueState(int $campaignId): array
+    {
+        global $wpdb;
+        $row = $wpdb->get_row(
+            $wpdb->prepare(
+                "SELECT
+                    MAX(sent_at) last_sent_at,
+                    SUM(CASE WHEN status='queued' THEN 1 ELSE 0 END) pending
+                 FROM {$this->queue}
+                 WHERE campaign_id=%d",
+                $campaignId
+            ),
+            ARRAY_A
+        ) ?: [];
+
+        $pending = (int) ($row['pending'] ?? 0);
+        $lastSentAt = (string) ($row['last_sent_at'] ?? '');
+        $lastSentTimestamp = $lastSentAt !== ''
+            ? strtotime($lastSentAt . ' UTC')
+            : false;
+        $availableAt = $lastSentTimestamp !== false
+            ? $lastSentTimestamp + DAY_IN_SECONDS
+            : 0;
+
+        return [
+            'allowed' => $pending === 0 && ($availableAt === 0 || time() >= $availableAt),
+            'available_at' => $availableAt,
+            'pending' => $pending,
+            'last_sent_at' => $lastSentAt,
+        ];
     }
 
     public function dueQueue(int $limit): array
