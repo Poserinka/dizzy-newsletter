@@ -43,6 +43,14 @@ final class Admin
     public function campaignsPage(): void
     {
         $this->header(__('Campaigns', 'dizzy-newsletter'), __('Create, schedule and monitor newsletter campaigns.', 'dizzy-newsletter'));
+        if (isset($_GET['send_locked'])) {
+            echo '<div class="notice notice-warning inline"><p>' . esc_html__('This campaign cannot be sent again until its 24-hour waiting period has ended.', 'dizzy-newsletter') . '</p></div>';
+        } elseif (isset($_GET['queued'])) {
+            printf(
+                '<div class="notice notice-success inline"><p>%s</p></div>',
+                esc_html(sprintf(__('Campaign queued for %d subscribers.', 'dizzy-newsletter'), absint($_GET['queued'])))
+            );
+        }
         echo '<p><a class="button button-primary" href="' . esc_url(admin_url('admin.php?page=dizzy-newsletter-campaign')) . '">' . esc_html__('Add Campaign', 'dizzy-newsletter') . '</a></p>';
         echo '<table class="widefat striped"><thead><tr><th>' . esc_html__('Campaign', 'dizzy-newsletter') . '</th><th>' . esc_html__('Subject', 'dizzy-newsletter') . '</th><th>' . esc_html__('Status', 'dizzy-newsletter') . '</th><th>' . esc_html__('Recipients', 'dizzy-newsletter') . '</th><th>' . esc_html__('Sent', 'dizzy-newsletter') . '</th><th>' . esc_html__('Failed', 'dizzy-newsletter') . '</th><th></th></tr></thead><tbody>';
         foreach ($this->repository->campaigns() as $row) {
@@ -74,17 +82,56 @@ final class Admin
             <p><button class="button button-primary button-large"><?php esc_html_e('Save Campaign', 'dizzy-newsletter'); ?></button></p>
         </form>
         <?php if ($campaign) : ?>
+            <?php $queueState = $this->repository->campaignQueueState((int) $campaign['id']); ?>
             <div class="dizzy-nl-actions dizzy-nl-card">
                 <form method="post" action="<?php echo esc_url(admin_url('admin-post.php')); ?>">
                     <input type="hidden" name="action" value="dizzy_nl_send_campaign"><input type="hidden" name="id" value="<?php echo absint($campaign['id']); ?>"><?php wp_nonce_field('dizzy_nl_send_campaign'); ?>
                     <label><?php esc_html_e('Schedule (optional)', 'dizzy-newsletter'); ?> <input type="datetime-local" name="scheduled_at"></label>
-                    <button class="button button-primary"><?php esc_html_e('Queue Campaign', 'dizzy-newsletter'); ?></button>
+                    <button
+                        class="button button-primary dizzy-nl-queue-button"
+                        <?php disabled(! $queueState['allowed']); ?>
+                        data-available-at="<?php echo esc_attr((string) ($queueState['available_at'] * 1000)); ?>"
+                    ><?php esc_html_e('Queue Campaign', 'dizzy-newsletter'); ?></button>
+                    <span class="dizzy-nl-queue-message">
+                        <?php
+                        if ($queueState['pending'] > 0) {
+                            esc_html_e('This campaign is currently queued or sending.', 'dizzy-newsletter');
+                        } elseif (! $queueState['allowed'] && $queueState['available_at'] > 0) {
+                            printf(
+                                esc_html__('This campaign can be sent again after %s.', 'dizzy-newsletter'),
+                                esc_html(wp_date(get_option('date_format') . ' ' . get_option('time_format'), $queueState['available_at']))
+                            );
+                        }
+                        ?>
+                    </span>
                 </form>
                 <form method="post" action="<?php echo esc_url(admin_url('admin-post.php')); ?>">
                     <input type="hidden" name="action" value="dizzy_nl_test_campaign"><input type="hidden" name="id" value="<?php echo absint($campaign['id']); ?>"><?php wp_nonce_field('dizzy_nl_test_campaign'); ?>
                     <input type="email" required name="test_email" placeholder="name@example.com"><button class="button"><?php esc_html_e('Send Test', 'dizzy-newsletter'); ?></button>
                 </form>
             </div>
+            <script>
+            (() => {
+                const button = document.querySelector('.dizzy-nl-queue-button');
+                const message = document.querySelector('.dizzy-nl-queue-message');
+                if (!button || !button.disabled) return;
+                const availableAt = Number(button.dataset.availableAt || 0);
+                if (!availableAt) return;
+                const update = () => {
+                    const remaining = availableAt - Date.now();
+                    if (remaining <= 0) {
+                        button.disabled = false;
+                        if (message) message.textContent = '';
+                        return;
+                    }
+                    const hours = Math.floor(remaining / 3600000);
+                    const minutes = Math.ceil((remaining % 3600000) / 60000);
+                    if (message) message.textContent = <?php echo wp_json_encode(__('Available again in', 'dizzy-newsletter')); ?> + ' ' + hours + 'h ' + minutes + 'm';
+                    window.setTimeout(update, 30000);
+                };
+                update();
+            })();
+            </script>
         <?php endif; echo '</div>';
     }
 
@@ -152,7 +199,7 @@ final class Admin
     }
 
     public function saveCampaign(): void { $this->guard('dizzy_nl_save_campaign'); $id = $this->repository->saveCampaign(wp_unslash($_POST)); $this->redirect('dizzy-newsletter-campaign', ['id' => $id, 'saved' => 1]); }
-    public function sendCampaign(): void { $this->guard('dizzy_nl_send_campaign'); $raw = sanitize_text_field(wp_unslash((string) ($_POST['scheduled_at'] ?? ''))); $scheduled = $raw !== '' ? get_gmt_from_date(str_replace('T', ' ', $raw) . ':00') : null; $count = $this->repository->enqueueCampaign(absint($_POST['id'] ?? 0), $scheduled); if ($scheduled === null) wp_schedule_single_event(time() + 10, 'dizzy_nl_process_queue'); $this->redirect('dizzy-newsletter', ['queued' => $count]); }
+    public function sendCampaign(): void { $this->guard('dizzy_nl_send_campaign'); $raw = sanitize_text_field(wp_unslash((string) ($_POST['scheduled_at'] ?? ''))); $scheduled = $raw !== '' ? get_gmt_from_date(str_replace('T', ' ', $raw) . ':00') : null; $count = $this->repository->enqueueCampaign(absint($_POST['id'] ?? 0), $scheduled); if ($count >= 0 && $scheduled === null) wp_schedule_single_event(time() + 10, 'dizzy_nl_process_queue'); $this->redirect('dizzy-newsletter', $count < 0 ? ['send_locked' => 1] : ['queued' => $count]); }
     public function testCampaign(): void { $this->guard('dizzy_nl_test_campaign'); $ok = $this->sender->sendTest(absint($_POST['id'] ?? 0), sanitize_email(wp_unslash((string) ($_POST['test_email'] ?? '')))); $this->redirect('dizzy-newsletter-campaign', ['id' => absint($_POST['id'] ?? 0), 'test' => $ok ? 1 : 0]); }
     public function saveContact(): void { $this->guard('dizzy_nl_save_contact'); $tags = explode(',', sanitize_text_field(wp_unslash((string) ($_POST['tags'] ?? '')))); $this->repository->saveContact((string) $_POST['email'], (string) ($_POST['name'] ?? ''), 'admin', $tags, true); $this->redirect('dizzy-newsletter-audience'); }
     public function deleteContact(): void { $this->guard('dizzy_nl_delete_contact'); $deleted = $this->repository->deleteContact(absint($_GET['id'] ?? 0)); $this->redirect('dizzy-newsletter-audience', ['deleted' => $deleted ? 1 : 0]); }
