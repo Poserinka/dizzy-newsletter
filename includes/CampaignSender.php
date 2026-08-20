@@ -53,7 +53,7 @@ final class CampaignSender
         $replacements = ['{subscriber_name}' => $subscriber_name, '{subscriber_email}' => $subscriber_email];
         $email_subject = ($test ? '[TEST] ' : '') . strtr((string) $row['subject'], $replacements);
         $preheader = (string) $row['preheader'];
-        $content = strtr((string) $row['content'], $replacements);
+        $content = $this->formatContent(strtr((string) $row['content'], $replacements));
         $hero_image_url = (string) $row['hero_image_url'];
         $button_text = (string) $row['button_text'];
         $button_url = $this->trackingUrl((string) $row['button_url'], $campaignId, $contactId);
@@ -91,6 +91,31 @@ final class CampaignSender
         ], home_url('/'));
     }
 
+    /**
+     * Convert editor line breaks to email-safe paragraphs and give every
+     * paragraph an inline bottom margin. Several mail clients discard theme
+     * CSS and otherwise render consecutive paragraphs as one visual line.
+     */
+    private function formatContent(string $content): string
+    {
+        $html = wpautop($content);
+        $formatted = preg_replace_callback(
+            '/<p(?P<attributes>\s[^>]*)?>/i',
+            static function (array $matches): string {
+                $attributes = (string) ($matches['attributes'] ?? '');
+
+                if (preg_match('/\sstyle\s*=/i', $attributes) === 1) {
+                    return '<p' . $attributes . '>';
+                }
+
+                return '<p' . $attributes . ' style="Margin:0 0 18px;line-height:1.7;">';
+            },
+            $html
+        );
+
+        return is_string($formatted) ? $formatted : $html;
+    }
+
     private function settings(): array
     {
         return wp_parse_args((array) get_option('dizzy_nl_settings', []), [
@@ -102,3 +127,4 @@ final class CampaignSender
         ]);
     }
 }
+
