@@ -38,6 +38,7 @@ final class Admin
         }
         wp_enqueue_style('dizzy-newsletter-admin', DIZZY_NL_URL . 'assets/admin.css', [], DIZZY_NL_VERSION);
         wp_enqueue_media();
+        wp_enqueue_script('dizzy-newsletter-admin', DIZZY_NL_URL . 'assets/admin.js', ['jquery', 'media-editor'], DIZZY_NL_VERSION, true);
     }
 
     public function campaignsPage(): void
@@ -73,7 +74,17 @@ final class Admin
                 <label><?php esc_html_e('Email subject', 'dizzy-newsletter'); ?><input required name="subject" value="<?php echo esc_attr((string) ($campaign['subject'] ?? '')); ?>"></label>
                 <label><?php esc_html_e('Preheader', 'dizzy-newsletter'); ?><input name="preheader" value="<?php echo esc_attr((string) ($campaign['preheader'] ?? '')); ?>"></label>
                 <label><?php esc_html_e('Audience tag (blank = everyone)', 'dizzy-newsletter'); ?><input name="target_tag" value="<?php echo esc_attr((string) ($campaign['target_tag'] ?? '')); ?>"></label>
-                <label><?php esc_html_e('Hero image URL', 'dizzy-newsletter'); ?><input type="url" name="hero_image_url" value="<?php echo esc_attr((string) ($campaign['hero_image_url'] ?? '')); ?>"></label>
+                <div class="dizzy-nl-hero-field">
+                    <span class="dizzy-nl-field-label"><?php esc_html_e('Hero image', 'dizzy-newsletter'); ?></span>
+                    <input type="hidden" class="dizzy-nl-hero-url" name="hero_image_url" value="<?php echo esc_attr((string) ($campaign['hero_image_url'] ?? '')); ?>">
+                    <div class="dizzy-nl-hero-preview"<?php echo empty($campaign['hero_image_url']) ? ' hidden' : ''; ?>>
+                        <img src="<?php echo esc_url((string) ($campaign['hero_image_url'] ?? '')); ?>" alt="">
+                    </div>
+                    <p>
+                        <button type="button" class="button dizzy-nl-select-hero"><?php esc_html_e('Select / Upload Image', 'dizzy-newsletter'); ?></button>
+                        <button type="button" class="button dizzy-nl-remove-hero"<?php echo empty($campaign['hero_image_url']) ? ' hidden' : ''; ?>><?php esc_html_e('Remove Image', 'dizzy-newsletter'); ?></button>
+                    </p>
+                </div>
                 <label><?php esc_html_e('Button text', 'dizzy-newsletter'); ?><input name="button_text" value="<?php echo esc_attr((string) ($campaign['button_text'] ?? '')); ?>"></label>
                 <label><?php esc_html_e('Button URL', 'dizzy-newsletter'); ?><input type="url" name="button_url" value="<?php echo esc_attr((string) ($campaign['button_url'] ?? '')); ?>"></label>
             </div>
