@@ -83,50 +83,22 @@ a[x-apple-data-detectors],
     <tbody>
      <tr>
       <td valign="top" style="padding:0;Margin:0">
-       <table cellpadding="0" cellspacing="0" align="center" class="es-header" role="none" style="mso-table-lspace:0pt;mso-table-rspace:0pt;border-spacing:0px;width:100%;table-layout:fixed !important;background-color:transparent;background-repeat:repeat;background-position:center top">
-        <tbody>
-         <tr>
-          <td align="center" style="padding:0;Margin:0">
-           <table bgcolor="#ffffff" align="center" cellpadding="0" cellspacing="0" class="es-header-body" role="none" style="mso-table-lspace:0pt;mso-table-rspace:0pt;border-spacing:0px;background-color:transparent;width:600px">
-            <tbody>
-             <tr>
-              <td align="left" style="padding:20px;Margin:0">
-               <table cellpadding="0" cellspacing="0" width="100%" role="none" style="mso-table-lspace:0pt;mso-table-rspace:0pt;border-spacing:0px">
-                <tbody>
-                 <tr>
-                  <td valign="top" align="center" class="es-m-p0r" style="padding:0;Margin:0;width:560px">
-                   <table cellpadding="0" cellspacing="0" width="100%" role="presentation" style="mso-table-lspace:0pt;mso-table-rspace:0pt;border-spacing:0px">
-                    <tbody>
-                     <tr>
-                      <td align="center" style="padding:0 0 10px;Margin:0;font-size:0px"><img src="<?php echo esc_url( site_url() ); ?>wp-content/plugins/dizzy-newsletter/includes/Email/Templates/images/jazzcafedizzylogoblack.png" alt="Logo" width="246" title="Logo" class="adapt-img" style="display:block;font-size:12px;border:0;outline:none;text-decoration:none;margin:0"></td>
-                     </tr>
-                    </tbody>
-                   </table></td>
-                 </tr>
-                </tbody>
-               </table></td>
-             </tr>
-            </tbody>
-           </table></td>
-         </tr>
-        </tbody>
-       </table>
        <table cellpadding="0" cellspacing="0" align="center" class="es-content" role="none" style="mso-table-lspace:0pt;mso-table-rspace:0pt;border-spacing:0px;width:100%;table-layout:fixed !important">
         <tbody>
          <tr>
           <td align="center" style="padding:0;Margin:0">
-           <table bgcolor="#ffffff" align="center" cellpadding="0" cellspacing="0" class="es-content-body" role="none" style="mso-table-lspace:0pt;mso-table-rspace:0pt;border-spacing:0px;background-color:#FFFFFF;width:600px">
-            <tbody>
-             <tr>
-              <td align="left" style="padding:15px 20px 0;Margin:0">
-               <table cellpadding="0" cellspacing="0" width="100%" role="none" style="mso-table-lspace:0pt;mso-table-rspace:0pt;border-spacing:0px">
-                <tbody>
-                 <tr>
-                  <td align="center" valign="top" style="padding:0;Margin:0;width:560px">
-                   <table cellpadding="0" cellspacing="0" width="100%" role="presentation" style="mso-table-lspace:0pt;mso-table-rspace:0pt;border-spacing:0px">
-                    <tbody>
-                     <tr>
-                      <td align="center" style="padding:10px 0;Margin:0;font-size:0px"><img src="<?php echo esc_url( site_url() ); ?>wp-content/plugins/dizzy-newsletter/includes/Email/Templates/images/jazzcafedizzylogoblack.png" alt="" width="484" class="adapt-img" style="display:block;font-size:14px;border:0;outline:none;text-decoration:none;margin:0"></td>
+<table bgcolor="#ffffff" align="center" cellpadding="0" cellspacing="0" class="es-content-body" role="none" style="mso-table-lspace:0pt;mso-table-rspace:0pt;border-spacing:0px;background-color:#FFFFFF;width:600px">
+	<tbody>
+		<tr>
+			<td align="left" bgcolor="#efefef" style="padding:15px 20px 0;Margin:0;background-color:#efefef;background:linear-gradient(0deg, #EFEFEF 0%, #FFFFFF 100%)">
+				<table cellpadding="0" cellspacing="0" width="100%" role="none" style="mso-table-lspace:0pt;mso-table-rspace:0pt;border-spacing:0px">
+					<tbody>
+						<tr>
+							<td align="center" valign="top" style="padding:0;Margin:0;width:560px">
+								<table cellpadding="0" cellspacing="0" width="100%" role="presentation" style="mso-table-lspace:0pt;mso-table-rspace:0pt;border-spacing:0px">
+									<tbody>
+										<tr>
+						<td align="center" style="padding:20px 0;Margin:0;font-size:0px"><img src="<?php echo esc_url( site_url() ); ?>/wp-content/plugins/dizzy-newsletter/includes/Email/Templates/images/jazzcafe-dizzy-logo-black.png" alt="" width="484" class="adapt-img" style="display:block;font-size:14px;border:0;outline:none;text-decoration:none;margin:0"></td>
                      </tr>
                      
 					<?php if ($hero_image_url !== '') : ?>	
@@ -155,13 +127,13 @@ a[x-apple-data-detectors],
                </table></td>
              </tr>
              <tr>
-              <td align="left" style="padding:0 20px 20px;Margin:0">
-               <table cellpadding="0" cellspacing="0" width="100%" role="none" style="mso-table-lspace:0pt;mso-table-rspace:0pt;border-spacing:0px">
-                <tbody>
-                 <tr>
-                  <td align="center" valign="top" style="padding:0;Margin:0;width:560px">
-                   <table cellpadding="0" cellspacing="0" width="100%" style="mso-table-lspace:0pt;mso-table-rspace:0pt;border-spacing:0px;border-radius:5px;border-collapse:separate" role="presentation">
-                    <tbody>
+<td align="left" bgcolor="#efefef" style="padding:0 20px 20px;Margin:0;background-color:#efefef;background:linear-gradient(0deg, #EFEFEF 0%, #EFEFEF 100%)">
+	<table cellpadding="0" cellspacing="0" width="100%" role="none" style="mso-table-lspace:0pt;mso-table-rspace:0pt;border-spacing:0px">
+		<tbody>
+			<tr>
+				<td align="center" valign="top" style="padding:0;Margin:0;width:560px">
+					<table cellpadding="0" cellspacing="0" width="100%" style="mso-table-lspace:0pt;mso-table-rspace:0pt;border-spacing:0px;border-radius:5px;border-collapse:separate" role="presentation">
+						<tbody>
 						
 						<?php if ($button_text !== '' && $button_url !== '') : ?>
 					 <tr>
@@ -182,25 +154,25 @@ a[x-apple-data-detectors],
          </tr>
         </tbody>
        </table>
-       <table cellpadding="0" cellspacing="0" align="center" class="es-footer" role="none" style="mso-table-lspace:0pt;mso-table-rspace:0pt;border-spacing:0px;width:100%;table-layout:fixed !important;background-color:transparent;background-repeat:repeat;background-position:center top">
-        <tbody>
-         <tr>
-          <td align="center" style="padding:0;Margin:0">
-           <table cellspacing="0" align="center" cellpadding="0" class="es-footer-body" style="mso-table-lspace:0pt;mso-table-rspace:0pt;border-spacing:0px;background-color:transparent;width:600px" role="none">
-            <tbody>
-             <tr>
-              <td align="left" style="padding:20px 20px 0;Margin:0">
-               <table width="100%" cellpadding="0" cellspacing="0" role="none" style="mso-table-lspace:0pt;mso-table-rspace:0pt;border-spacing:0px">
-                <tbody>
-                 <tr>
-                  <td align="left" style="padding:0;Margin:0;width:560px">
-                   <table cellspacing="0" width="100%" cellpadding="0" role="presentation" style="mso-table-lspace:0pt;mso-table-rspace:0pt;border-spacing:0px">
-                    <tbody>
-                     <tr>
-                      <td align="center" style="padding:15px 0;Margin:0;font-size:0">
-                       <table cellpadding="0" cellspacing="0" class="es-table-not-adapt es-social" role="presentation" style="mso-table-lspace:0pt;mso-table-rspace:0pt;border-spacing:0px">
-                        <tbody>
-                         <tr>
+<table cellpadding="0" cellspacing="0" align="center" class="es-footer" role="none" style="mso-table-lspace:0pt;mso-table-rspace:0pt;border-spacing:0px;width:100%;table-layout:fixed !important;background-color:transparent;background-repeat:repeat;background-position:center top">
+	<tbody>
+		<tr>
+			<td align="center" style="padding:0;Margin:0">
+				<table cellspacing="0" align="center" cellpadding="0" class="es-footer-body" style="mso-table-lspace:0pt;mso-table-rspace:0pt;border-spacing:0px;background-color:transparent;width:600px" role="none">
+					<tbody>
+						<tr>
+							<td align="left" bgcolor="#ffffff" style="padding:20px 20px 0;Margin:0;background-color:#ffffff;background:linear-gradient(0deg, #FFFFFF 0%, #EFEFEF 100%)">
+								<table width="100%" cellpadding="0" cellspacing="0" role="none" style="mso-table-lspace:0pt;mso-table-rspace:0pt;border-spacing:0px">
+									<tbody>
+										<tr>
+											<td align="left" style="padding:0;Margin:0;width:560px">
+												<table cellspacing="0" width="100%" cellpadding="0" role="presentation" style="mso-table-lspace:0pt;mso-table-rspace:0pt;border-spacing:0px">
+													<tbody>
+														<tr>
+															<td align="center" style="padding:15px 0;Margin:0;font-size:0">
+																<table cellpadding="0" cellspacing="0" class="es-table-not-adapt es-social" role="presentation" style="mso-table-lspace:0pt;mso-table-rspace:0pt;border-spacing:0px">
+																	<tbody>
+																		<tr>
                           <td align="center" valign="top" class="es-m-p40r" style="padding:0 40px 0 0;Margin:0"><a href="https://www.facebook.com/DizzyJazz/" target="_blank" style="mso-line-height-rule:exactly;text-decoration:underline;color:#333333;font-size:12px;font-weight:inherit"><img alt="Fb" width="32" title="Facebook" src="<?php echo esc_url( site_url() ); ?>/wp-content/plugins/dizzy-newsletter/includes/Email/Templates/images/facebook-logo-black.png" style="display:block;font-size:14px;border:0;outline:none;text-decoration:none;margin:0"></a></td>
                           <td valign="top" align="center" class="es-m-p40r" style="padding:0 40px 0 0;Margin:0"><a href="https://www.instagram.com/jazz_cafe_dizzy" target="_blank" style="mso-line-height-rule:exactly;text-decoration:underline;color:#333333;font-size:12px;font-weight:inherit"><img alt="Inst" width="32" title="Instagram" src="<?php echo esc_url( site_url() ); ?>/wp-content/plugins/dizzy-newsletter/includes/Email/Templates/images/instagram-logo-black.png" style="display:block;font-size:14px;border:0;outline:none;text-decoration:none;margin:0"></a></td>
                           <td valign="top" align="center" style="padding:0;Margin:0"><a target="_blank" href="https://www.tiktok.com/discover/jazz-cafe-dizzy-rotterdam" style="mso-line-height-rule:exactly;text-decoration:underline;color:#333333;font-size:12px;font-weight:inherit"><img alt="TT" width="32" title="TikTok" src="<?php echo esc_url( site_url() ); ?>/wp-content/plugins/dizzy-newsletter/includes/Email/Templates/images/tiktok-logo-black.png" style="display:block;font-size:14px;border:0;outline:none;text-decoration:none;margin:0"></a></td>
