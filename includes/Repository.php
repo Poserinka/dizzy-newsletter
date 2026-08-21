@@ -72,6 +72,16 @@ final class Repository
         return is_array($row) ? $row : null;
     }
 
+    public function contact(int $id): ?array
+    {
+        global $wpdb;
+        $row = $wpdb->get_row(
+            $wpdb->prepare("SELECT * FROM {$this->contacts} WHERE id=%d LIMIT 1", $id),
+            ARRAY_A
+        );
+        return is_array($row) ? $row : null;
+    }
+
     public function contactByToken(string $token): ?array
     {
         global $wpdb;
