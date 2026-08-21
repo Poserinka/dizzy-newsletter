@@ -43,26 +43,32 @@ final class Frontend
             'render_callback' => fn (array $attributes): string => $this->shortcode($attributes),
             'attributes' => [
                 'title' => ['type' => 'string', 'default' => ''],
+                'namePlaceholder' => ['type' => 'string', 'default' => __('Enter Name', 'dizzy-newsletter')],
                 'placeholder' => ['type' => 'string', 'default' => __('Enter Email', 'dizzy-newsletter')],
                 'buttonText' => ['type' => 'string', 'default' => __('Sign Up', 'dizzy-newsletter')],
                 'tag' => ['type' => 'string', 'default' => 'website'],
                 'layout' => ['type' => 'string', 'default' => 'horizontal'],
                 'theme' => ['type' => 'string', 'default' => 'dark'],
-                'showName' => ['type' => 'boolean', 'default' => false],
+                'showName' => ['type' => 'boolean', 'default' => true],
             ],
         ]);
     }
 
     public function shortcode(array $atts = []): string
     {
+        $showNameValue = array_key_exists('showName', $atts)
+            ? $atts['showName']
+            : ($atts['show_name'] ?? true);
         $atts = shortcode_atts([
-            'title' => '', 'placeholder' => __('Enter Email', 'dizzy-newsletter'),
+            'title' => '', 'namePlaceholder' => __('Enter Name', 'dizzy-newsletter'),
+            'name_placeholder' => '', 'placeholder' => __('Enter Email', 'dizzy-newsletter'),
             'buttonText' => __('Sign Up', 'dizzy-newsletter'), 'button_text' => '',
             'tag' => 'website', 'layout' => 'horizontal', 'theme' => 'dark',
-            'showName' => false, 'show_name' => false,
+            'showName' => true, 'show_name' => true,
         ], $atts);
         $button = $atts['button_text'] !== '' ? $atts['button_text'] : $atts['buttonText'];
-        $showName = filter_var($atts['showName'] ?: $atts['show_name'], FILTER_VALIDATE_BOOLEAN);
+        $namePlaceholder = $atts['name_placeholder'] !== '' ? $atts['name_placeholder'] : $atts['namePlaceholder'];
+        $showName = filter_var($showNameValue, FILTER_VALIDATE_BOOLEAN);
         $settings = (array) get_option('dizzy_nl_settings', []);
         wp_enqueue_style('dizzy-newsletter');
         wp_enqueue_script('dizzy-newsletter');
@@ -73,7 +79,7 @@ final class Frontend
                 <input type="hidden" name="action" value="dizzy_nl_subscribe">
                 <input type="hidden" name="tag" value="<?php echo esc_attr((string) $atts['tag']); ?>">
                 <input class="dizzy-nl-trap" name="company" tabindex="-1" autocomplete="off">
-                <?php if ($showName) : ?><input type="text" name="name" placeholder="<?php esc_attr_e('Your name', 'dizzy-newsletter'); ?>"><?php endif; ?>
+                <?php if ($showName) : ?><input type="text" name="name" placeholder="<?php echo esc_attr((string) $namePlaceholder); ?>" autocomplete="name"><?php endif; ?>
                 <input type="email" name="email" placeholder="<?php echo esc_attr((string) $atts['placeholder']); ?>" required autocomplete="email">
                 <button type="submit"><?php echo esc_html((string) $button); ?></button>
                 <?php if (! empty($settings['privacy_url'])) : ?>
