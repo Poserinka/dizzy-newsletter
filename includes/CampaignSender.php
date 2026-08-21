@@ -47,27 +47,16 @@ final class CampaignSender
     {
         $campaignId = (int) ($row['campaign_id'] ?? $row['id'] ?? 0);
         $contactId = (int) ($row['contact_id'] ?? 0);
-        $subscriber_name = (string) ($row['subscriber_name'] ?? '');
         $subscriber_email = (string) $row['email'];
-        $campaign_title = (string) $row['name'];
-        $replacements = ['{subscriber_name}' => $subscriber_name, '{subscriber_email}' => $subscriber_email];
+        $subscriberName = (string) ($row['subscriber_name'] ?? '');
+        $replacements = ['{subscriber_name}' => $subscriberName, '{subscriber_email}' => $subscriber_email];
         $email_subject = ($test ? '[TEST] ' : '') . strtr((string) $row['subject'], $replacements);
-        $preheader = (string) $row['preheader'];
-        $content = $this->formatContent(strtr((string) $row['content'], $replacements));
-        $hero_image_url = (string) $row['hero_image_url'];
-        $button_text = (string) $row['button_text'];
-        $button_url = $this->trackingUrl((string) $row['button_url'], $campaignId, $contactId);
-        $site_name = get_bloginfo('name');
-        $site_url = home_url('/');
         $unsubscribe_url = $contactId > 0 ? Frontend::actionUrl('unsubscribe', $contactId) : home_url('/');
-        $view_in_browser_url = $contactId > 0 ? Frontend::actionUrl('view', $contactId, ['campaign' => $campaignId]) : home_url('/');
-        $tracking_pixel_url = ! empty($settings['track_opens']) && $contactId > 0
-            ? add_query_arg(['dizzy_nl_action' => 'open', 'campaign' => $campaignId, 'contact' => $contactId, 'sig' => Frontend::signature('open', $contactId, $campaignId)], home_url('/'))
-            : '';
-
-        ob_start();
-        include DIZZY_NL_DIR . 'includes/Email/Templates/newsletter.php';
-        $html = (string) ob_get_clean();
+        $html = $this->renderCampaignHtml(
+            $row,
+            ['id' => $contactId, 'name' => $subscriberName, 'email' => $subscriber_email],
+            ! empty($settings['track_opens'])
+        );
         $headers = [
             'Content-Type: text/html; charset=UTF-8',
             'From: ' . sanitize_text_field((string) $settings['from_name']) . ' <' . sanitize_email((string) $settings['from_email']) . '>',
@@ -75,6 +64,43 @@ final class CampaignSender
             'List-Unsubscribe: <' . esc_url_raw($unsubscribe_url) . '>',
         ];
         return wp_mail($subscriber_email, $email_subject, $html, $headers);
+    }
+
+    public function renderCampaignHtml(array $campaign, array $contact, bool $trackOpen = false): string
+    {
+        $campaignId = (int) ($campaign['campaign_id'] ?? $campaign['id'] ?? 0);
+        $contactId = (int) ($contact['id'] ?? 0);
+        $subscriber_name = (string) ($contact['name'] ?? $contact['subscriber_name'] ?? '');
+        $subscriber_email = (string) ($contact['email'] ?? '');
+        $campaign_title = (string) ($campaign['name'] ?? '');
+        $replacements = ['{subscriber_name}' => $subscriber_name, '{subscriber_email}' => $subscriber_email];
+        $email_subject = strtr((string) ($campaign['subject'] ?? ''), $replacements);
+        $preheader = (string) ($campaign['preheader'] ?? '');
+        $content = $this->formatContent(strtr((string) ($campaign['content'] ?? ''), $replacements));
+        $hero_image_url = (string) ($campaign['hero_image_url'] ?? '');
+        $button_text = (string) ($campaign['button_text'] ?? '');
+        $button_url = $this->trackingUrl((string) ($campaign['button_url'] ?? ''), $campaignId, $contactId);
+        $site_name = get_bloginfo('name');
+        $site_url = home_url('/');
+        $unsubscribe_url = $contactId > 0
+            ? Frontend::actionUrl('unsubscribe', $contactId)
+            : home_url('/');
+        $view_in_browser_url = $contactId > 0
+            ? Frontend::actionUrl('view', $contactId, ['campaign' => $campaignId])
+            : home_url('/');
+        $settings = $this->settings();
+        $tracking_pixel_url = $trackOpen && ! empty($settings['track_opens']) && $contactId > 0
+            ? add_query_arg([
+                'dizzy_nl_action' => 'open',
+                'campaign' => $campaignId,
+                'contact' => $contactId,
+                'sig' => Frontend::signature('open', $contactId, $campaignId),
+            ], home_url('/'))
+            : '';
+
+        ob_start();
+        include DIZZY_NL_DIR . 'includes/Email/Templates/newsletter.php';
+        return (string) ob_get_clean();
     }
 
     private function trackingUrl(string $url, int $campaignId, int $contactId): string
