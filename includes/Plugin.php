@@ -12,7 +12,7 @@ final class Plugin
     {
         $repository = new Repository();
         $sender = new CampaignSender($repository);
-        (new Frontend($repository))->register();
+        (new Frontend($repository, $sender))->register();
         (new Admin($repository, $sender))->register();
 
         add_action('dizzy_nl_process_queue', [$sender, 'processQueue']);
