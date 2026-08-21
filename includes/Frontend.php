@@ -8,7 +8,10 @@ defined('ABSPATH') || exit;
 
 final class Frontend
 {
-    public function __construct(private Repository $repository)
+    public function __construct(
+        private Repository $repository,
+        private CampaignSender $sender
+    )
     {
     }
 
@@ -166,8 +169,12 @@ final class Frontend
         }
         if ($action === 'view') {
             $campaign = $this->repository->campaign($campaignId);
-            if ($campaign) {
-                echo wp_kses_post((string) $campaign['content']);
+            $contact = $this->repository->contact($contactId);
+            if ($campaign && $contact) {
+                status_header(200);
+                nocache_headers();
+                header('Content-Type: text/html; charset=' . get_bloginfo('charset'));
+                echo $this->sender->renderCampaignHtml($campaign, $contact, false);
                 exit;
             }
         }
