@@ -7,7 +7,8 @@
         icon: 'email-alt2',
         category: 'widgets',
         attributes: {
-            title: { type: 'string', default: '' },
+            title: { type: 'string', default: 'Keep Up to Date with Jazzcafe Dizzy' },
+            description: { type: 'string', default: 'Sign up to be the first to receive special news and event updates from Jazzcafe Dizzy.' },
             namePlaceholder: { type: 'string', default: 'Enter Name' },
             placeholder: { type: 'string', default: 'Enter Email' },
             buttonText: { type: 'string', default: 'Sign Up' },
@@ -26,6 +27,7 @@
                     components.PanelBody,
                     { title: 'Newsletter Settings' },
                     el(components.TextControl, { label: 'Title', value: attributes.title, onChange: value => setAttributes({ title: value }) }),
+                    el(components.TextareaControl, { label: 'Description', value: attributes.description, onChange: value => setAttributes({ description: value }) }),
                     el(components.ToggleControl, { label: 'Show name field', checked: attributes.showName, onChange: value => setAttributes({ showName: value }) }),
                     el(components.TextControl, { label: 'Name placeholder', value: attributes.namePlaceholder, onChange: value => setAttributes({ namePlaceholder: value }) }),
                     el(components.TextControl, { label: 'Email placeholder', value: attributes.placeholder, onChange: value => setAttributes({ placeholder: value }) }),
@@ -50,14 +52,18 @@
                     style: {
                         background: attributes.theme === 'dark' ? '#191919' : '#f4f4f4',
                         color: attributes.theme === 'dark' ? '#fff' : '#111',
-                        padding: '40px',
-                        textAlign: 'center',
+                        alignItems: 'center', display: 'flex', gap: '36px', justifyContent: 'space-between', padding: '48px',
                     },
                 },
-                attributes.title && el('h3', {}, attributes.title),
-                attributes.showName && el('span', { style: { border: '1px solid #888', display: 'inline-block', padding: '14px', minWidth: '180px' } }, attributes.namePlaceholder),
-                el('span', { style: { border: '1px solid #888', display: 'inline-block', marginLeft: '12px', padding: '14px', minWidth: '220px' } }, attributes.placeholder),
-                el('button', { style: { marginLeft: '12px', padding: '15px 26px' } }, attributes.buttonText)
+                (attributes.title || attributes.description) && el('div', { style: { flex: '1 1 280px' } },
+                    attributes.title && el('h3', { style: { margin: '0 0 10px' } }, attributes.title),
+                    attributes.description && el('p', { style: { margin: 0, opacity: '.72' } }, attributes.description)
+                ),
+                el('div', { style: { display: 'flex', flex: '1 1 520px', gap: '12px' } },
+                    attributes.showName && el('span', { style: { border: '1px solid #777', flex: '1', padding: '14px' } }, attributes.namePlaceholder),
+                    el('span', { style: { border: '1px solid #777', flex: '1', padding: '14px' } }, attributes.placeholder),
+                    el('button', { style: { border: 0, padding: '15px 26px' } }, attributes.buttonText)
+                )
             )
         ),
         save: () => null,
