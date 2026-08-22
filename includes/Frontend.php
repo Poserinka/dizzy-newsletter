@@ -42,7 +42,8 @@ final class Frontend
             'editor_script' => 'dizzy-newsletter-block',
             'render_callback' => fn (array $attributes): string => $this->shortcode($attributes),
             'attributes' => [
-                'title' => ['type' => 'string', 'default' => ''],
+                'title' => ['type' => 'string', 'default' => __('Keep Up to Date with Jazzcafe Dizzy', 'dizzy-newsletter')],
+                'description' => ['type' => 'string', 'default' => __('Sign up to be the first to receive special news and event updates from Jazzcafe Dizzy.', 'dizzy-newsletter')],
                 'namePlaceholder' => ['type' => 'string', 'default' => __('Enter Name', 'dizzy-newsletter')],
                 'placeholder' => ['type' => 'string', 'default' => __('Enter Email', 'dizzy-newsletter')],
                 'buttonText' => ['type' => 'string', 'default' => __('Sign Up', 'dizzy-newsletter')],
@@ -60,7 +61,9 @@ final class Frontend
             ? $atts['showName']
             : ($atts['show_name'] ?? true);
         $atts = shortcode_atts([
-            'title' => '', 'namePlaceholder' => __('Enter Name', 'dizzy-newsletter'),
+            'title' => __('Keep Up to Date with Jazzcafe Dizzy', 'dizzy-newsletter'),
+            'description' => __('Sign up to be the first to receive special news and event updates from Jazzcafe Dizzy.', 'dizzy-newsletter'),
+            'namePlaceholder' => __('Enter Name', 'dizzy-newsletter'),
             'name_placeholder' => '', 'placeholder' => __('Enter Email', 'dizzy-newsletter'),
             'buttonText' => __('Sign Up', 'dizzy-newsletter'), 'button_text' => '',
             'tag' => 'website', 'layout' => 'horizontal', 'theme' => 'dark',
@@ -74,8 +77,13 @@ final class Frontend
         wp_enqueue_script('dizzy-newsletter');
         ob_start(); ?>
         <div class="dizzy-nl-signup dizzy-nl-<?php echo esc_attr((string) $atts['theme']); ?> dizzy-nl-<?php echo esc_attr((string) $atts['layout']); ?>">
-            <?php if ($atts['title'] !== '') : ?><h3><?php echo esc_html((string) $atts['title']); ?></h3><?php endif; ?>
-            <form class="dizzy-nl-form">
+            <?php if ($atts['title'] !== '' || $atts['description'] !== '') : ?>
+                <div class="dizzy-nl-copy">
+                    <?php if ($atts['title'] !== '') : ?><h3><?php echo esc_html((string) $atts['title']); ?></h3><?php endif; ?>
+                    <?php if ($atts['description'] !== '') : ?><p><?php echo esc_html((string) $atts['description']); ?></p><?php endif; ?>
+                </div>
+            <?php endif; ?>
+            <form class="dizzy-nl-form" novalidate>
                 <input type="hidden" name="action" value="dizzy_nl_subscribe">
                 <input type="hidden" name="tag" value="<?php echo esc_attr((string) $atts['tag']); ?>">
                 <input class="dizzy-nl-trap" name="company" tabindex="-1" autocomplete="off">
