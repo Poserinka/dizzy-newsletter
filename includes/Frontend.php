@@ -72,45 +72,26 @@ final class Frontend
         $button = $atts['button_text'] !== '' ? $atts['button_text'] : $atts['buttonText'];
         $namePlaceholder = $atts['name_placeholder'] !== '' ? $atts['name_placeholder'] : $atts['namePlaceholder'];
         $showName = filter_var($showNameValue, FILTER_VALIDATE_BOOLEAN);
-        $settings = (array) get_option('dizzy_nl_settings', []);
         wp_enqueue_style('dizzy-newsletter');
         wp_enqueue_script('dizzy-newsletter');
         ob_start(); ?>
-
-<div class="wp-block-group alignwide" bis_skin_checked="1">
-	<div class="wp-block-group__inner-container is-layout-flow wp-block-group-is-layout-flow" bis_skin_checked="1">
-		<form id="mc4wp-form-1" class="mc4wp-form mc4wp-form-1959" method="post" data-id="1959" data-name="soulkitchen Form" novalidate>
-			<div class="mc4wp-form-fields" bis_skin_checked="1">
-				
- <?php if ($atts['title'] !== '' || $atts['description'] !== '') : ?>				
-				
-				 <?php if ($atts['title'] !== '') : ?><h3><?php echo esc_html((string) $atts['title']); ?></h3><?php endif; ?>  <?php if ($atts['description'] !== '') : ?><span class="subscribe-text"><?php echo esc_html((string) $atts['description']); ?></span><?php endif; ?>
-				
-   <?php endif; ?>		
-				
-				<span class="subscribe-form"> 
-					
-				<input type="hidden" name="action" value="dizzy_nl_subscribe">
+        <div class="dizzy-nl-signup dizzy-nl-<?php echo esc_attr((string) $atts['theme']); ?> dizzy-nl-<?php echo esc_attr((string) $atts['layout']); ?>">
+            <?php if ($atts['title'] !== '' || $atts['description'] !== '') : ?>
+                <div class="dizzy-nl-copy">
+                    <?php if ($atts['title'] !== '') : ?><h3><?php echo esc_html((string) $atts['title']); ?></h3><?php endif; ?>
+                    <?php if ($atts['description'] !== '') : ?><p><?php echo esc_html((string) $atts['description']); ?></p><?php endif; ?>
+                </div>
+            <?php endif; ?>
+            <form class="dizzy-nl-form" novalidate>
+                <input type="hidden" name="action" value="dizzy_nl_subscribe">
                 <input type="hidden" name="tag" value="<?php echo esc_attr((string) $atts['tag']); ?>">
-					
-					<?php if ($showName) : ?>
-					<input type="email" name="name" placeholder="<?php echo esc_attr((string) $namePlaceholder); ?>" required autocomplete="name">
-					<?php endif; ?>
-					<input type="email" name="email" placeholder="<?php echo esc_attr((string) $atts['placeholder']); ?>" required autocomplete="email">
-					<input type="submit" value="<?php echo esc_html((string) $button); ?>"> </span>
-			
-			
-			</div>
-			<?php if (! empty($settings['privacy_url'])) : ?>
-			<label>
-				<input type="checkbox" name="consent" value="1" required> <?php printf(wp_kses(__('I agree to the <a href="%s">privacy policy</a>.', 'dizzy-newsletter'), ['a' => ['href' => []]]), esc_url((string) $settings['privacy_url'])); ?>
-			</label>
-			<?php endif; ?>
-			<div class="mc4wp-response" bis_skin_checked="1" role="status" aria-live="polite"></div>
-		</form>
-	</div>
-</div>
-
+                <input class="dizzy-nl-trap" name="company" tabindex="-1" autocomplete="off">
+                <?php if ($showName) : ?><input type="text" name="name" placeholder="<?php echo esc_attr((string) $namePlaceholder); ?>" autocomplete="name"><?php endif; ?>
+                <input type="email" name="email" placeholder="<?php echo esc_attr((string) $atts['placeholder']); ?>" required autocomplete="email">
+                <button type="submit"><?php echo esc_html((string) $button); ?></button>
+                <div class="dizzy-nl-result" role="status" aria-live="polite"></div>
+            </form>
+        </div>
         <?php return (string) ob_get_clean();
     }
 
@@ -128,9 +109,6 @@ final class Frontend
             wp_send_json_success(['message' => __('Thank you.', 'dizzy-newsletter')]);
         }
         $settings = (array) get_option('dizzy_nl_settings', []);
-        if (! empty($settings['privacy_url']) && empty($_POST['consent'])) {
-            wp_send_json_error(['message' => __('Please accept the privacy policy.', 'dizzy-newsletter')], 400);
-        }
         $confirmed = empty($settings['double_optin']);
         $result = $this->repository->saveContact(
             sanitize_email(wp_unslash((string) ($_POST['email'] ?? ''))),
