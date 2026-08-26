@@ -156,7 +156,14 @@ final class Frontend
         if ($action === 'unsubscribe') {
             $this->repository->setContactStatus($contactId, 'unsubscribed');
             $this->repository->logEvent($campaignId, $contactId, 'unsubscribe');
-            wp_die(esc_html__('You have been unsubscribed.', 'dizzy-newsletter'), esc_html__('Unsubscribed', 'dizzy-newsletter'), ['response' => 200]);
+            $redirectUrl = (string) apply_filters(
+                'dizzy_nl_unsubscribe_redirect_url',
+                home_url('/unsubscribe/'),
+                $contactId,
+                $campaignId
+            );
+            wp_safe_redirect($redirectUrl, 302, 'Dizzy Newsletter');
+            exit;
         }
         if ($action === 'click') {
             $target = esc_url_raw(rawurldecode((string) ($_GET['target'] ?? '')));
