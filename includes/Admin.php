@@ -26,7 +26,7 @@ final class Admin
         add_menu_page(__('Newsletter', 'dizzy-newsletter'), __('Newsletter', 'dizzy-newsletter'), 'manage_options', 'dizzy-newsletter', [$this, 'campaignsPage'], 'dashicons-email-alt2', 27);
         add_submenu_page('dizzy-newsletter', __('Campaigns', 'dizzy-newsletter'), __('Campaigns', 'dizzy-newsletter'), 'manage_options', 'dizzy-newsletter', [$this, 'campaignsPage']);
         add_submenu_page('dizzy-newsletter', __('Add Campaign', 'dizzy-newsletter'), __('Add Campaign', 'dizzy-newsletter'), 'manage_options', 'dizzy-newsletter-campaign', [$this, 'campaignPage']);
-        add_submenu_page('dizzy-newsletter', __('Audience', 'dizzy-newsletter'), __('Audience', 'dizzy-newsletter'), 'manage_options', 'dizzy-newsletter-audience', [$this, 'audiencePage']);
+        add_submenu_page('dizzy-newsletter', __('Subscribers', 'dizzy-newsletter'), __('Subscribers', 'dizzy-newsletter'), 'manage_options', 'dizzy-newsletter-audience', [$this, 'audiencePage']);
         add_submenu_page('dizzy-newsletter', __('Analytics', 'dizzy-newsletter'), __('Analytics', 'dizzy-newsletter'), 'manage_options', 'dizzy-newsletter-analytics', [$this, 'analyticsPage']);
         add_submenu_page('dizzy-newsletter', __('Settings', 'dizzy-newsletter'), __('Settings', 'dizzy-newsletter'), 'manage_options', 'dizzy-newsletter-settings', [$this, 'settingsPage']);
     }
@@ -64,7 +64,7 @@ final class Admin
     public function campaignPage(): void
     {
         $campaign = $this->repository->campaign(absint($_GET['id'] ?? 0)) ?: [];
-        $this->header($campaign ? __('Edit Campaign', 'dizzy-newsletter') : __('Add Campaign', 'dizzy-newsletter'), __('Build the message, select an audience tag and send immediately or later.', 'dizzy-newsletter'));
+        $this->header($campaign ? __('Edit Campaign', 'dizzy-newsletter') : __('Add Campaign', 'dizzy-newsletter'), __('Build the message, select a subscriber tag and send immediately or later.', 'dizzy-newsletter'));
         ?>
         <form method="post" action="<?php echo esc_url(admin_url('admin-post.php')); ?>" class="dizzy-nl-card">
             <input type="hidden" name="action" value="dizzy_nl_save_campaign"><input type="hidden" name="id" value="<?php echo absint($campaign['id'] ?? 0); ?>">
@@ -143,7 +143,36 @@ final class Admin
                 update();
             })();
             </script>
-        <?php endif; echo '</div>';
+        <?php endif;
+        $previewCampaign = wp_parse_args($campaign, [
+            'id' => 0,
+            'name' => __('Newsletter Preview', 'dizzy-newsletter'),
+            'subject' => __('Newsletter Preview', 'dizzy-newsletter'),
+            'preheader' => __('Your campaign preheader will appear here.', 'dizzy-newsletter'),
+            'content' => '<p>' . __('Your campaign content preview will appear here.', 'dizzy-newsletter') . '</p>',
+            'hero_image_url' => '',
+            'button_text' => __('Read more', 'dizzy-newsletter'),
+            'button_url' => home_url('/'),
+        ]);
+        $previewHtml = $this->sender->renderCampaignHtml(
+            $previewCampaign,
+            ['id' => 0, 'name' => __('Subscriber Name', 'dizzy-newsletter'), 'email' => 'subscriber@example.com'],
+            false
+        );
+        ?>
+        <section class="dizzy-nl-card dizzy-nl-preview-section">
+            <h2><?php esc_html_e('Preview', 'dizzy-newsletter'); ?></h2>
+            <p class="description"><?php esc_html_e('This preview uses the same email template as the delivered campaign. Save the campaign to refresh edited content.', 'dizzy-newsletter'); ?></p>
+            <div class="dizzy-nl-preview-stage">
+                <iframe
+                    class="dizzy-nl-preview-frame"
+                    title="<?php esc_attr_e('Campaign email preview', 'dizzy-newsletter'); ?>"
+                    srcdoc="<?php echo esc_attr($previewHtml); ?>"
+                    sandbox
+                ></iframe>
+            </div>
+        </section>
+        <?php echo '</div>';
     }
 
     public function audiencePage(): void
@@ -152,8 +181,19 @@ final class Admin
         $search = sanitize_text_field(wp_unslash((string) ($_GET['s'] ?? '')));
         $status = sanitize_key((string) ($_GET['status'] ?? ''));
         $data = $this->repository->contacts($page, 50, $search, $status);
-        $this->header(__('Audience', 'dizzy-newsletter'), sprintf(__('%d contacts. Fifty contacts are shown per page.', 'dizzy-newsletter'), $data['total']));
+        $stats = $this->repository->subscriberStats();
+        $this->header(__('Subscribers', 'dizzy-newsletter'), sprintf(__('%d records. Fifty subscribers are shown per page.', 'dizzy-newsletter'), $data['total']));
         ?>
+        <div class="dizzy-nl-stats dizzy-nl-subscriber-stats">
+            <?php foreach ([
+                __('Total Subscribers', 'dizzy-newsletter') => $stats['total'],
+                __('Today', 'dizzy-newsletter') => $stats['today'],
+                __('This Month', 'dizzy-newsletter') => $stats['month'],
+                __('Unsubscribed', 'dizzy-newsletter') => $stats['unsubscribed'],
+            ] as $label => $value) : ?>
+                <div><strong><?php echo esc_html((string) $value); ?></strong><span><?php echo esc_html($label); ?></span></div>
+            <?php endforeach; ?>
+        </div>
         <div class="dizzy-nl-toolbar">
             <form><input type="hidden" name="page" value="dizzy-newsletter-audience"><input name="s" value="<?php echo esc_attr($search); ?>" placeholder="<?php esc_attr_e('Search contacts', 'dizzy-newsletter'); ?>"><select name="status"><option value=""><?php esc_html_e('All statuses', 'dizzy-newsletter'); ?></option><?php foreach (['subscribed','pending','unsubscribed','bounced'] as $value) : ?><option <?php selected($status, $value); ?>><?php echo esc_html(ucfirst($value)); ?></option><?php endforeach; ?></select><button class="button"><?php esc_html_e('Filter', 'dizzy-newsletter'); ?></button></form>
             <span><a class="button" href="<?php echo esc_url(wp_nonce_url(admin_url('admin-post.php?action=dizzy_nl_export&format=csv'), 'dizzy_nl_export')); ?>"><?php esc_html_e('Export CSV / Google Sheets', 'dizzy-newsletter'); ?></a> <a class="button" href="<?php echo esc_url(wp_nonce_url(admin_url('admin-post.php?action=dizzy_nl_export&format=txt'), 'dizzy_nl_export')); ?>"><?php esc_html_e('Export TXT', 'dizzy-newsletter'); ?></a></span>
