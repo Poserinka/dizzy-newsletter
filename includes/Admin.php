@@ -70,10 +70,10 @@ final class Admin
             <input type="hidden" name="action" value="dizzy_nl_save_campaign"><input type="hidden" name="id" value="<?php echo absint($campaign['id'] ?? 0); ?>">
             <?php wp_nonce_field('dizzy_nl_save_campaign'); ?>
             <div class="dizzy-nl-grid">
-                <label><?php esc_html_e('Campaign name', 'dizzy-newsletter'); ?><input required name="name" value="<?php echo esc_attr((string) ($campaign['name'] ?? '')); ?>"></label>
-                <label><?php esc_html_e('Email subject', 'dizzy-newsletter'); ?><input required name="subject" value="<?php echo esc_attr((string) ($campaign['subject'] ?? '')); ?>"></label>
-                <label><?php esc_html_e('Preheader', 'dizzy-newsletter'); ?><input name="preheader" value="<?php echo esc_attr((string) ($campaign['preheader'] ?? '')); ?>"></label>
-                <label><?php esc_html_e('Audience tag (blank = everyone)', 'dizzy-newsletter'); ?><input name="target_tag" value="<?php echo esc_attr((string) ($campaign['target_tag'] ?? '')); ?>"></label>
+                <label><?php esc_html_e('Campaign name', 'dizzy-newsletter'); ?><input required type="text" name="name" value="<?php echo esc_attr((string) ($campaign['name'] ?? '')); ?>"></label>
+                <label><?php esc_html_e('Email subject', 'dizzy-newsletter'); ?><input required type="text" name="subject" value="<?php echo esc_attr((string) ($campaign['subject'] ?? '')); ?>"></label>
+                <label><?php esc_html_e('Preheader', 'dizzy-newsletter'); ?><input type="text" name="preheader" value="<?php echo esc_attr((string) ($campaign['preheader'] ?? '')); ?>"></label>
+                <label><?php esc_html_e('Audience tag (blank = everyone)', 'dizzy-newsletter'); ?><input type="text" name="target_tag" value="<?php echo esc_attr((string) ($campaign['target_tag'] ?? '')); ?>"></label>
                 <div class="dizzy-nl-hero-field">
                     <span class="dizzy-nl-field-label"><?php esc_html_e('Hero image', 'dizzy-newsletter'); ?></span>
                     <input type="hidden" class="dizzy-nl-hero-url" name="hero_image_url" value="<?php echo esc_attr((string) ($campaign['hero_image_url'] ?? '')); ?>">
@@ -85,7 +85,7 @@ final class Admin
                         <button type="button" class="button dizzy-nl-remove-hero"<?php echo empty($campaign['hero_image_url']) ? ' hidden' : ''; ?>><?php esc_html_e('Remove Image', 'dizzy-newsletter'); ?></button>
                     </p>
                 </div>
-                <label><?php esc_html_e('Button text', 'dizzy-newsletter'); ?><input name="button_text" value="<?php echo esc_attr((string) ($campaign['button_text'] ?? '')); ?>"></label>
+                <label><?php esc_html_e('Button text', 'dizzy-newsletter'); ?><input type="text" name="button_text" value="<?php echo esc_attr((string) ($campaign['button_text'] ?? '')); ?>"></label>
                 <label><?php esc_html_e('Button URL', 'dizzy-newsletter'); ?><input type="url" name="button_url" value="<?php echo esc_attr((string) ($campaign['button_url'] ?? '')); ?>"></label>
             </div>
             <h2><?php esc_html_e('Email content', 'dizzy-newsletter'); ?></h2>
