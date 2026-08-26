@@ -5,3 +5,9 @@
 .dizzy-nl-preview-stage{align-items:flex-start;background:#f0f0f1;border:1px solid #dcdcde;display:flex;justify-content:center;margin-top:18px;overflow:auto;padding:24px}
 .dizzy-nl-preview-frame{background:#fff;border:1px solid #c3c4c7;display:block;height:900px;max-width:100%;width:700px}
 @media(max-width:900px){.dizzy-nl-subscriber-stats{grid-template-columns:repeat(2,1fr)}.dizzy-nl-preview-stage{padding:10px}.dizzy-nl-preview-frame{height:760px;width:100%}}
+.dizzy-nl-add-subscriber-fields{display:grid;gap:16px;grid-template-columns:repeat(3,minmax(180px,1fr))}
+.dizzy-nl-add-subscriber-fields label{font-weight:600}
+.dizzy-nl-add-subscriber-fields label span{display:block;margin-bottom:7px}
+.dizzy-nl-add-subscriber-fields input{box-sizing:border-box;width:100%}
+.dizzy-nl-add-subscriber-submit{margin:16px 0 0}
+@media(max-width:900px){.dizzy-nl-add-subscriber-fields{grid-template-columns:1fr}}
