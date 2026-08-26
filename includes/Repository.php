@@ -131,6 +131,45 @@ final class Repository
         return ['rows' => $rows, 'total' => $total, 'pages' => max(1, (int) ceil($total / $perPage))];
     }
 
+    /**
+     * @return array{total:int,today:int,month:int,unsubscribed:int}
+     */
+    public function subscriberStats(): array
+    {
+        global $wpdb;
+
+        $timezone = wp_timezone();
+        $utc = new \DateTimeZone('UTC');
+        $now = new \DateTimeImmutable('now', $timezone);
+        $todayStart = $now->setTime(0, 0)->setTimezone($utc);
+        $tomorrowStart = $todayStart->modify('+1 day');
+        $monthStart = $now->modify('first day of this month')->setTime(0, 0)->setTimezone($utc);
+        $nextMonthStart = $monthStart->modify('+1 month');
+
+        $row = $wpdb->get_row(
+            $wpdb->prepare(
+                "SELECT
+                    SUM(status='subscribed') total,
+                    SUM(status='subscribed' AND COALESCE(confirmed_at,created_at)>=%s AND COALESCE(confirmed_at,created_at)<%s) today,
+                    SUM(status='subscribed' AND COALESCE(confirmed_at,created_at)>=%s AND COALESCE(confirmed_at,created_at)<%s) month,
+                    SUM(status='unsubscribed') unsubscribed
+                FROM {$this->contacts}",
+                $todayStart->format('Y-m-d H:i:s'),
+                $tomorrowStart->format('Y-m-d H:i:s'),
+                $monthStart->format('Y-m-d H:i:s'),
+                $nextMonthStart->format('Y-m-d H:i:s')
+            ),
+            ARRAY_A
+        ) ?: [];
+
+        return [
+            'total' => (int) ($row['total'] ?? 0),
+            'today' => (int) ($row['today'] ?? 0),
+            'month' => (int) ($row['month'] ?? 0),
+            'unsubscribed' => (int) ($row['unsubscribed'] ?? 0),
+        ];
+    }
+
     public function deleteContact(int $id): bool
     {
         global $wpdb;
