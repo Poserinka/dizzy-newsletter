@@ -198,7 +198,28 @@ final class Admin
             <form><input type="hidden" name="page" value="dizzy-newsletter-audience"><input name="s" value="<?php echo esc_attr($search); ?>" placeholder="<?php esc_attr_e('Search contacts', 'dizzy-newsletter'); ?>"><select name="status"><option value=""><?php esc_html_e('All statuses', 'dizzy-newsletter'); ?></option><?php foreach (['subscribed','pending','unsubscribed','bounced'] as $value) : ?><option <?php selected($status, $value); ?>><?php echo esc_html(ucfirst($value)); ?></option><?php endforeach; ?></select><button class="button"><?php esc_html_e('Filter', 'dizzy-newsletter'); ?></button></form>
             <span><a class="button" href="<?php echo esc_url(wp_nonce_url(admin_url('admin-post.php?action=dizzy_nl_export&format=csv'), 'dizzy_nl_export')); ?>"><?php esc_html_e('Export CSV / Google Sheets', 'dizzy-newsletter'); ?></a> <a class="button" href="<?php echo esc_url(wp_nonce_url(admin_url('admin-post.php?action=dizzy_nl_export&format=txt'), 'dizzy_nl_export')); ?>"><?php esc_html_e('Export TXT', 'dizzy-newsletter'); ?></a></span>
         </div>
-        <details class="dizzy-nl-card"><summary><?php esc_html_e('Add contact', 'dizzy-newsletter'); ?></summary><form method="post" action="<?php echo esc_url(admin_url('admin-post.php')); ?>"><input type="hidden" name="action" value="dizzy_nl_save_contact"><?php wp_nonce_field('dizzy_nl_save_contact'); ?><input required type="email" name="email" placeholder="Email"><input name="name" placeholder="Name"><input name="tags" placeholder="jazz,events"><button class="button button-primary"><?php esc_html_e('Add', 'dizzy-newsletter'); ?></button></form></details>
+        <details class="dizzy-nl-card dizzy-nl-add-subscriber">
+            <summary><?php esc_html_e('Add contact', 'dizzy-newsletter'); ?></summary>
+            <form method="post" action="<?php echo esc_url(admin_url('admin-post.php')); ?>">
+                <input type="hidden" name="action" value="dizzy_nl_save_contact">
+                <?php wp_nonce_field('dizzy_nl_save_contact'); ?>
+                <div class="dizzy-nl-add-subscriber-fields">
+                    <label>
+                        <span><?php esc_html_e('Name', 'dizzy-newsletter'); ?></span>
+                        <input name="name" placeholder="<?php esc_attr_e('Name', 'dizzy-newsletter'); ?>">
+                    </label>
+                    <label>
+                        <span><?php esc_html_e('Email', 'dizzy-newsletter'); ?></span>
+                        <input required type="email" name="email" placeholder="name@example.com">
+                    </label>
+                    <label>
+                        <span><?php esc_html_e('Tags', 'dizzy-newsletter'); ?></span>
+                        <input name="tags" value="website" placeholder="website">
+                    </label>
+                </div>
+                <p class="dizzy-nl-add-subscriber-submit"><button class="button button-primary"><?php esc_html_e('Add', 'dizzy-newsletter'); ?></button></p>
+            </form>
+        </details>
         <details class="dizzy-nl-card"><summary><?php esc_html_e('Import CSV, TXT or Google Sheet', 'dizzy-newsletter'); ?></summary><form enctype="multipart/form-data" method="post" action="<?php echo esc_url(admin_url('admin-post.php')); ?>"><input type="hidden" name="action" value="dizzy_nl_import"><?php wp_nonce_field('dizzy_nl_import'); ?><input type="file" name="import_file" accept=".csv,.txt"><input type="url" name="sheet_url" placeholder="Published Google Sheet CSV URL"><button class="button"><?php esc_html_e('Import', 'dizzy-newsletter'); ?></button><p class="description"><?php esc_html_e('Accepted columns: email, name, tags. Publish Google Sheets as CSV before importing.', 'dizzy-newsletter'); ?></p></form></details>
         <table class="widefat striped"><thead><tr><th><?php esc_html_e('Name', 'dizzy-newsletter'); ?></th><th>Email</th><th><?php esc_html_e('Status', 'dizzy-newsletter'); ?></th><th><?php esc_html_e('Tags', 'dizzy-newsletter'); ?></th><th><?php esc_html_e('Source', 'dizzy-newsletter'); ?></th><th><?php esc_html_e('Subscribed', 'dizzy-newsletter'); ?></th><th></th></tr></thead><tbody>
         <?php foreach ($data['rows'] as $row) : ?><tr><td><?php echo esc_html((string) $row['name']); ?></td><td><?php echo esc_html((string) $row['email']); ?></td><td><?php echo esc_html((string) $row['status']); ?></td><td><?php echo esc_html((string) $row['tags']); ?></td><td><?php echo esc_html((string) $row['source']); ?></td><td><?php echo esc_html((string) ($row['confirmed_at'] ?: $row['created_at'])); ?></td><td><a class="submitdelete" href="<?php echo esc_url(wp_nonce_url(admin_url('admin-post.php?action=dizzy_nl_delete_contact&id=' . absint($row['id'])), 'dizzy_nl_delete_contact')); ?>"><?php esc_html_e('Delete', 'dizzy-newsletter'); ?></a></td></tr><?php endforeach; ?>
