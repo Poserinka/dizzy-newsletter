@@ -11,3 +11,8 @@
 .dizzy-nl-add-subscriber-fields input{box-sizing:border-box;width:100%}
 .dizzy-nl-add-subscriber-submit{margin:16px 0 0}
 @media(max-width:900px){.dizzy-nl-add-subscriber-fields{grid-template-columns:1fr}}
+.dizzy-nl-subscriber-filter{align-items:center;display:flex;flex-wrap:wrap;gap:8px}
+.dizzy-nl-subscriber-filter input[type=search],.dizzy-nl-subscriber-filter select,.dizzy-nl-subscriber-filter .button{box-sizing:border-box;min-height:40px}
+.dizzy-nl-subscriber-filter input[type=search]{min-width:240px;padding:0 12px}
+.dizzy-nl-subscriber-filter select{min-width:150px;padding-top:0;padding-bottom:0}
+.dizzy-nl-subscriber-filter .button{align-items:center;display:inline-flex;padding:0 16px}
