@@ -206,7 +206,7 @@ final class Admin
                 <div class="dizzy-nl-add-subscriber-fields">
                     <label>
                         <span><?php esc_html_e('Name', 'dizzy-newsletter'); ?></span>
-                        <input name="name" placeholder="<?php esc_attr_e('Name', 'dizzy-newsletter'); ?>">
+                        <input type="text" name="name" placeholder="<?php esc_attr_e('Name', 'dizzy-newsletter'); ?>">
                     </label>
                     <label>
                         <span><?php esc_html_e('Email', 'dizzy-newsletter'); ?></span>
@@ -214,7 +214,7 @@ final class Admin
                     </label>
                     <label>
                         <span><?php esc_html_e('Tags', 'dizzy-newsletter'); ?></span>
-                        <input name="tags" value="website" placeholder="website">
+                        <input type="text" name="tags" value="website" placeholder="website">
                     </label>
                 </div>
                 <p class="dizzy-nl-add-subscriber-submit"><button class="button button-primary"><?php esc_html_e('Add', 'dizzy-newsletter'); ?></button></p>
