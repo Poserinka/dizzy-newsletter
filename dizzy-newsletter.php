@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Dizzy Newsletter
  * Description: Independent newsletter campaigns, audiences, analytics and signup forms.
- * Version: 1.0.16
+ * Version: 1.0.17
  * Author: Poserinka
  * Text Domain: dizzy-newsletter
  * Requires at least: 6.4
@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 defined('ABSPATH') || exit;
 
-define('DIZZY_NL_VERSION', '1.0.16');
+define('DIZZY_NL_VERSION', '1.0.17');
 define('DIZZY_NL_FILE', __FILE__);
 define('DIZZY_NL_DIR', plugin_dir_path(__FILE__));
 define('DIZZY_NL_URL', plugin_dir_url(__FILE__));
